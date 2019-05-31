@@ -7,7 +7,6 @@
           <div>
             <input
               type="text"
-              class="form-control"
               placeholder="Please enter your name ..."
               name="name"
               v-model="name"
