@@ -19,3 +19,39 @@
     </div>
   </div>
 </template>
+
+<script>
+import CreateMessage from "@/components/CreateMessage";
+import fb from "@/firebase";
+import moment from "moment";
+
+export default {
+  name: "Chat",
+  props: ["name"],
+  components: {
+    CreateMessage
+  },
+  data() {
+    return {
+      messages: []
+    };
+  },
+  created() {
+    let ref = fb.collection("messages").orderBy("timestamp");
+
+    ref.onSnapshot(snapshot => {
+      snapshot.docChanges().forEach(change => {
+        if (change.type == "added") {
+          let doc = change.doc;
+          this.messages.push({
+            id: doc.id,
+            name: doc.data().name,
+            message: doc.data().message,
+            timestamp: moment(doc.data().timestamp).format("LTS")
+          });
+        }
+      });
+    });
+  }
+};
+</script>
